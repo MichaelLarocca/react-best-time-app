@@ -66,6 +66,7 @@ const Timer = () => {
 
   return (
     <div className='timer'>
+      <h1>STOPWATCH</h1>
       <div className='buttons'>
         <button onClick={startTimer}>Start</button>
         {running ? (
