@@ -1,35 +1,80 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import { format, addMilliseconds, differenceInMilliseconds } from 'date-fns';
 
-function App() {
-  const [count, setCount] = useState(0)
+const Timer = () => {
+  const [time, setTime] = useState(new Date(0, 0, 0, 0, 0, 0, 0));
+  const [running, setRunning] = useState(false);
+  const [startTime, setStartTime] = useState(null);
+
+  const startTimer = () => {
+    if (startTime === null) {
+      setStartTime(new Date());
+    }
+    setRunning(true);
+  };
+
+  const pauseTimer = () => {
+    if (running) {
+      setRunning(false);
+    }
+  };
+
+  const resumeTimer = () => {
+    if (startTime === null) {
+      startTimer();
+    } else {
+      const elapsedTime = differenceInMilliseconds(new Date(), startTime);
+      const newStartTime = addMilliseconds(new Date(), -elapsedTime);
+      setStartTime(newStartTime);
+      setRunning(true);
+    }
+  };
+
+  const resetTimer = () => {
+    setTime(new Date(0, 0, 0, 0, 0, 0, 0));
+    setRunning(false);
+    setStartTime(null);
+  };
+
+  const formattedTime = () => {
+    const minutes = format(time, 'mm');
+    const seconds = format(time, 'ss');
+    const milliseconds = format(time, 'SSS');
+    return `${minutes}:${seconds}:${milliseconds}`;
+  };
+
+  useEffect(() => {
+    let interval;
+    if (running) {
+      const updateTime = () => {
+        const now = new Date();
+        const elapsed = differenceInMilliseconds(now, startTime);
+        setTime(new Date(0, 0, 0, 0, 0, 0, elapsed));
+      };
+  
+      interval = setInterval(updateTime, 10); // Update every 10 milliseconds for better accuracy
+      updateTime(); // Update immediately on start
+    } else {
+      clearInterval(interval);
+    }
+  
+    return () => {
+      clearInterval(interval);
+    };
+  }, [running, startTime]);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+      <h1>{formattedTime()}</h1>
+      <button onClick={startTimer}>Start</button>
+      {running ? (
+        <button onClick={pauseTimer}>Pause</button>
+      ) : (
+        <button onClick={resumeTimer}>Resume</button>
+      )}
+      <button onClick={resetTimer}>Reset</button>
+    </div>
+  );
+};
 
-export default App
+export default Timer;
