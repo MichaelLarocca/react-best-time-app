@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { format, addMilliseconds, differenceInMilliseconds } from 'date-fns';
+import './App.css';
 
 const Timer = () => {
   const [time, setTime] = useState(new Date(0, 0, 0, 0, 0, 0, 0));
@@ -64,15 +65,17 @@ const Timer = () => {
   }, [running, startTime]);
 
   return (
-    <div>
+    <div className='timer'>
+      <div className='buttons'>
+        <button onClick={startTimer}>Start</button>
+        {running ? (
+          <button onClick={pauseTimer}>Pause</button>
+        ) : (
+          <button onClick={resumeTimer}>Resume</button>
+        )}
+        <button onClick={resetTimer}>Reset</button>
+      </div>
       <h1>{formattedTime()}</h1>
-      <button onClick={startTimer}>Start</button>
-      {running ? (
-        <button onClick={pauseTimer}>Pause</button>
-      ) : (
-        <button onClick={resumeTimer}>Resume</button>
-      )}
-      <button onClick={resetTimer}>Reset</button>
     </div>
   );
 };
