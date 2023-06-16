@@ -3,7 +3,7 @@ import { format, addMilliseconds, differenceInMilliseconds } from 'date-fns';
 import './App.css';
 
 const Timer = () => {
-  const [time, setTime] = useState(new Date(0, 0, 0, 0, 0, 0, 0));
+  const savedTime = parseInt(localStorage.getItem("savedTime"), 10) || 0; const [time, setTime] = useState(new Date(savedTime));
   const [running, setRunning] = useState(false);
   const [startTime, setStartTime] = useState(null);
 
@@ -29,9 +29,10 @@ const Timer = () => {
   };
 
   const resetTimer = () => {
-    setTime(new Date(0, 0, 0, 0, 0, 0, 0));
+    setTime(new Date(0));
     setRunning(false);
     setStartTime(null);
+    localStorage.setItem("savedTime", 0);
     localStorage.removeItem('startTime');
     localStorage.removeItem('pausedTime');
   };
