@@ -2,24 +2,33 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-.buttons {
-  /* border: 1px solid red; */
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f2f2f2;
 }
 
 .timer {
-  /* border: 1px solid red; */
+  border: 5px solid #555;
+  border-radius: 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
   font-family: Arial, sans-serif;
-  margin-top: 100px;
+  width: 400px;
+  margin: 0 auto;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  background-image: linear-gradient(45deg, red, white, blue);
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
 }
 
 .timer h1 {
   font-size: 48px;
   margin-bottom: 20px;
+  color: #333;
 }
 
 .timer button {
