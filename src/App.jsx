@@ -8,8 +8,15 @@ const Timer = () => {
   const [startTime, setStartTime] = useState(null);
 
   const startTimer = () => {
-    if (startTime === null) {
-      setStartTime(new Date());
+    const savedTime = parseInt(localStorage.getItem("pausedTime"), 10);
+  
+    if (savedTime) {
+      const newStartTime = new Date().getTime() - savedTime;
+      setStartTime(newStartTime);
+    } else {
+      const newStartTime = new Date();
+      setStartTime(newStartTime);
+      localStorage.setItem('startTime', newStartTime);
     }
     setRunning(true);
   };
@@ -17,17 +24,7 @@ const Timer = () => {
   const pauseTimer = () => {
     if (running) {
       setRunning(false);
-    }
-  };
-
-  const resumeTimer = () => {
-    if (startTime === null) {
-      startTimer();
-    } else {
-      const elapsedTime = differenceInMilliseconds(new Date(), startTime);
-      const newStartTime = addMilliseconds(new Date(), -elapsedTime);
-      setStartTime(newStartTime);
-      setRunning(true);
+      localStorage.setItem('pausedTime', time.getTime());
     }
   };
 
@@ -35,44 +32,39 @@ const Timer = () => {
     setTime(new Date(0, 0, 0, 0, 0, 0, 0));
     setRunning(false);
     setStartTime(null);
+    localStorage.removeItem('startTime');
+    localStorage.removeItem('pausedTime');
   };
 
   const formattedTime = () => {
     const minutes = format(time, 'mm');
     const seconds = format(time, 'ss');
-    const milliseconds = format(time, 'SSS');
+    const milliseconds = format(time, 'SS');
     return `${minutes}:${seconds}:${milliseconds}`;
   };
 
   useEffect(() => {
-    let interval;
     if (running) {
-      const updateTime = () => {
-        const now = new Date();
-        const elapsed = differenceInMilliseconds(now, startTime);
-        setTime(new Date(0, 0, 0, 0, 0, 0, elapsed));
-      };
+      const interval = setInterval(() => {
+        setTime(new Date(new Date().getTime() - startTime));
+      }, 10);
   
-      interval = setInterval(updateTime, 10); // Update every 10 milliseconds for better accuracy
-      updateTime(); // Update immediately on start
-    } else {
-      clearInterval(interval);
+      // Save the current time in local storage
+      localStorage.setItem("savedTime", time.getTime());
+  
+      return () => clearInterval(interval);
     }
-  
-    return () => {
-      clearInterval(interval);
-    };
-  }, [running, startTime]);
+  }, [running, startTime, time]);
 
   return (
     <div className='timer'>
       <h1>STOPWATCH</h1>
       <div className='buttons'>
-        <button onClick={startTimer}>Start</button>
+        <button onClick={startTimer} disabled={running}>Start</button>
         {running ? (
           <button onClick={pauseTimer}>Pause</button>
         ) : (
-          <button onClick={resumeTimer}>Resume</button>
+          <button onClick={startTimer}>Resume</button>
         )}
         <button onClick={resetTimer}>Reset</button>
       </div>
