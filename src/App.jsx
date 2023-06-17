@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { format, addMilliseconds, differenceInMilliseconds } from 'date-fns';
+import { format } from 'date-fns';
 import './App.css';
 
 const Timer = () => {
-  const savedTime = parseInt(localStorage.getItem("savedTime"), 10) || 0; const [time, setTime] = useState(new Date(savedTime));
+  const savedTime = parseInt(localStorage.getItem("savedTime"), 10) || 0; 
+  const [time, setTime] = useState(new Date(savedTime));
   const [running, setRunning] = useState(false);
   const [startTime, setStartTime] = useState(null);
 
