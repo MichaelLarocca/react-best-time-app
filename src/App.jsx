@@ -8,7 +8,7 @@ const Timer = () => {
   const [running, setRunning] = useState(false);
   const [startTime, setStartTime] = useState(null);
 
-  const startTimer = () => {
+  function startTimer() {
     const savedTime = parseInt(localStorage.getItem("pausedTime"), 10);
   
     if (savedTime) {
@@ -22,14 +22,14 @@ const Timer = () => {
     setRunning(true);
   };
 
-  const pauseTimer = () => {
+  function pauseTimer() {
     if (running) {
       setRunning(false);
       localStorage.setItem('pausedTime', time.getTime());
     }
   };
 
-  const resetTimer = () => {
+  function resetTimer() {
     setTime(new Date(0));
     setRunning(false);
     setStartTime(null);
@@ -38,7 +38,7 @@ const Timer = () => {
     localStorage.removeItem('pausedTime');
   };
 
-  const formattedTime = () => {
+  function formattedTime() {
     const minutes = format(time, 'mm');
     const seconds = format(time, 'ss');
     const milliseconds = format(time, 'SS');
